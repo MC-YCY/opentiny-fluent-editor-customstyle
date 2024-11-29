@@ -1,9 +1,20 @@
 <template>
-  <div style="width: 499px">
-    <AudioCom :src="srcAudio" :name="'音乐名称'"></AudioCom>
-  </div>
+  <el-button @click="clickEdit">
+    {{isEditText ? '完成' : '编辑'}}
+  </el-button>
+  <Editor ref="editorRef" :textContent="textContent" :disabled="isEditText"></Editor>
 </template>
-<script setup>
-import srcAudio from './views/audio/audioList/yswh.mp3';
-import AudioCom from './views/audio/index.vue';
+
+<script setup lang="ts">
+import Editor from './components/editor/index.vue';
+const defaultContent = `<h3><strong style="font-size: 24px;">富文本编辑器和markdown编辑器的区别</strong></h3><h3>1. <strong>工作原理</strong>：</h3><ol class="bullet"><li class="bullet"><span class="ql-ui" contenteditable="false"></span><strong>富文本编辑器</strong>：</li><li class="bullet ql-indent-1"><span class="ql-ui" contenteditable="false"></span>富文本编辑器允许用户以可视化的方式进行文本编辑。用户可以通过点击工具栏中的按钮来修改字体、颜色、大小，插入链接、图片等，编辑过程与最终输出的格式没有太大差别。</li><li class="bullet ql-indent-1"><span class="ql-ui" contenteditable="false"></span>编辑器通常会生成 HTML 格式的内容。</li><li class="bullet"><span class="ql-ui" contenteditable="false"></span><strong>Markdown 编辑器</strong>：</li><li class="bullet ql-indent-1"><span class="ql-ui" contenteditable="false"></span>Markdown 编辑器使用 Markdown 语法来书写文本，用户通过简单的文本标记（例如 <code>#</code>、<code>*</code>、<code>**</code>）来设置标题、列表、加粗、斜体等格式。</li><li class="bullet ql-indent-1"><span class="ql-ui" contenteditable="false"></span>编辑器本身会将 Markdown 语法转换为 HTML 或其他格式，最终的输出是纯文本的 Markdown 格式。</li></ol><h3>2. <strong>输出格式</strong>：</h3><ol class="bullet"><li class="bullet"><span class="ql-ui" contenteditable="false"></span><strong>富文本编辑器</strong>： 输出的通常是 HTML 格式，包含丰富的标签，如 <code>&lt;b&gt;</code>, <code>&lt;i&gt;</code>, <code>&lt;p&gt;</code>, <code>&lt;img&gt;</code>&nbsp;等，适用于网页或具有复杂样式要求的内容。</li><li class="bullet"><span class="ql-ui" contenteditable="false"></span><strong>Markdown 编辑器</strong>： 输出的通常是 Markdown 格式（.md），它是一种轻量级的标记语言，生成的内容较为简洁、可读，便于转换成 HTML 或其他格式。</li></ol><h3>3. <strong>使用场景</strong>：</h3><ol class="bullet"><li class="bullet"><span class="ql-ui" contenteditable="false"></span><strong>富文本编辑器</strong>：</li><li class="bullet ql-indent-1"><span class="ql-ui" contenteditable="false"></span>适用于需要高度可视化、交互性较强的场景，例如 WordPress 博客编辑、在线文档编辑器、邮件客户端等。</li><li class="bullet ql-indent-1"><span class="ql-ui" contenteditable="false"></span>对用户体验要求较高，可以直接预览和修改样式。</li><li class="bullet"><span class="ql-ui" contenteditable="false"></span><strong>Markdown 编辑器</strong>：</li><li class="bullet ql-indent-1"><span class="ql-ui" contenteditable="false"></span>适用于开发人员、技术文档编写、博客系统（如 GitHub、GitLab）等场景，通常用来书写简单、结构化的文本，能够快速生成易于阅读的文档。</li><li class="bullet ql-indent-1"><span class="ql-ui" contenteditable="false"></span>适用于需要轻量、易维护的文档或文章。</li></ol><h3>4. <strong>灵活性与简洁性</strong>：</h3><ol class="bullet"><li class="bullet"><span class="ql-ui" contenteditable="false"></span><strong>富文本编辑器</strong>：</li><li class="bullet ql-indent-1"><span class="ql-ui" contenteditable="false"></span>更加灵活，可以插入复杂的内容，如表格、视频、富媒体等，样式多样。</li><li class="bullet ql-indent-1"><span class="ql-ui" contenteditable="false"></span>对用户的操作界面要求较高，通常需要更多的代码支持和界面设计。</li><li class="bullet"><span class="ql-ui" contenteditable="false"></span><strong>Markdown 编辑器</strong>：</li><li class="bullet ql-indent-1"><span class="ql-ui" contenteditable="false"></span>更加简洁，适合纯文本内容的处理，易于学习和使用。</li><li class="bullet ql-indent-1"><span class="ql-ui" contenteditable="false"></span>不依赖复杂的界面和工具，写作时专注于内容本身。</li></ol><h3>5. <strong>学习曲线</strong>：</h3><ol class="bullet"><li class="bullet"><span class="ql-ui" contenteditable="false"></span><strong>富文本编辑器</strong>： 易于上手，面向一般用户，适合不懂代码的用户。</li><li class="bullet"><span class="ql-ui" contenteditable="false"></span><strong>Markdown 编辑器</strong>： 需要用户了解一定的 Markdown 语法，适合开发者或需要编写简单格式文档的人。</li></ol><h3>总结：</h3><ol class="bullet"><li class="bullet"><span class="ql-ui" contenteditable="false"></span><strong>富文本编辑器</strong>： 强调可视化编辑和复杂样式，适合需要精确控制布局和格式的场景。</li><li class="bullet"><span class="ql-ui" contenteditable="false"></span><strong>Markdown 编辑器</strong>： 强调简洁和易用，适合编写技术文档、博客、说明文件等，不需要复杂的格式控制。</li></ol><p>根据你要处理的内容和目标受众，选择合适的编辑器。如果你需要快速、简洁的文本编辑并且关心格式转换，Markdown 编辑器是一个不错的选择。如果你需要丰富的文本样式和互动功能，那么富文本编辑器更适合。</p>`
+
+const textContent = ref(defaultContent);
+import {ref} from 'vue';
+const editorRef = ref();
+const isEditText = ref(false);
+const clickEdit = () =>{
+  isEditText.value = !isEditText.value;
+  console.log(editorRef.value.getHTML())
+}
 </script>
