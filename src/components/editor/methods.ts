@@ -96,7 +96,11 @@ export const listingChange = (event, componentEl, actions, example, record) => {
   }
   let clickType = record.value
   elMap[clickType].click()
-  actions.listing = clickType
+  if(clickType === actions.listing){
+    actions.listing = null;
+  }else{
+    actions.listing = clickType
+  }
 }
 
 // 水平对齐
