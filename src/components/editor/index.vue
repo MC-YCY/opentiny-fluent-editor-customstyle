@@ -3,7 +3,7 @@ import FluentEditor from '@opentiny/fluent-editor'
 import '@opentiny/fluent-editor/style.css'
 import { fontStyleOptions, listingOptions, alignOptions } from './options'
 import { clickRedo, clickUndo, fontSizeChange, fontSizeAdd, fontSizeDel, fontStyleChange, listingChange, alignChange, selectionChange, disabledInput } from './methods'
-import { ref, onMounted, defineProps, watch} from 'vue'
+import { ref, onMounted, defineProps, watch } from 'vue'
 const props = defineProps({
   textContent: {
     type: String,
@@ -19,6 +19,14 @@ watch(
   () => {
     disabledInput(props, componentEl)
   },
+)
+watch(
+  () => props.textContent,
+  () =>{
+    if(example.value?.root){
+      example.value.root.innerHTML = props.textContent;
+    }
+  }
 )
 let editorRef = ref()
 let example = ref()
